@@ -15,7 +15,8 @@ export default defineConfig({
       '@utils': path.join(__dirname, 'src/utils'),
       '@hooks': path.join(__dirname, 'src/hooks'),
       '@types': path.join(__dirname, 'src/types'),
-      '@store': path.join(__dirname, 'src/store')
+      '@store': path.join(__dirname, 'src/store'),
+      '@views': path.join(__dirname, 'src/views')
     }
   }
 })
