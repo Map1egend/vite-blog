@@ -7,10 +7,12 @@ specifiers:
   '@fortawesome/free-solid-svg-icons': ^6.1.2
   '@fortawesome/vue-fontawesome': ^3.0.1
   '@jaames/iro': ^5.5.2
+  '@types/animejs': ^3.1.5
   '@types/node': ^18.6.2
   '@typescript-eslint/eslint-plugin': ^5.31.0
   '@typescript-eslint/parser': ^5.31.0
   '@vitejs/plugin-vue': ^3.0.0
+  animejs: ^3.2.1
   eslint: ^8.20.0
   eslint-config-prettier: ^8.5.0
   eslint-plugin-prettier: ^4.2.1
@@ -34,12 +36,14 @@ dependencies:
   '@fortawesome/free-solid-svg-icons': registry.npmmirror.com/@fortawesome/free-solid-svg-icons/6.1.2
   '@fortawesome/vue-fontawesome': registry.npmmirror.com/@fortawesome/vue-fontawesome/3.0.1_sqiqa7hvpgqdakjrbqzbqxvzme
   '@jaames/iro': registry.npmmirror.com/@jaames/iro/5.5.2
+  animejs: registry.npmmirror.com/animejs/3.2.1
   pinia: registry.npmmirror.com/pinia/2.0.17_j6bzmzd4ujpabbp5objtwxyjp4
   sass: registry.npmmirror.com/sass/1.54.0
   vue: registry.npmmirror.com/vue/3.2.37
   vue-router: registry.npmmirror.com/vue-router/4.1.4_vue@3.2.37
 
 devDependencies:
+  '@types/animejs': registry.npmmirror.com/@types/animejs/3.1.5
   '@types/node': registry.npmmirror.com/@types/node/18.6.2
   '@typescript-eslint/eslint-plugin': registry.npmmirror.com/@typescript-eslint/eslint-plugin/5.31.0_d5zwcxr4bwkhmuo464cb3a2puu
   '@typescript-eslint/parser': registry.npmmirror.com/@typescript-eslint/parser/5.31.0_he2ccbldppg44uulnyq4rwocfa
@@ -237,6 +241,12 @@ packages:
     dependencies:
       estree-walker: registry.npmmirror.com/estree-walker/2.0.2
       picomatch: registry.npmmirror.com/picomatch/2.3.1
+    dev: true
+
+  registry.npmmirror.com/@types/animejs/3.1.5:
+    resolution: {integrity: sha512-4i3i1YuNaNEPoHBJY78uzYu8qKIwyx96G04tnVtNhRMQC9I1Xhg6fY9GeWmZAzudaesKKrPkQgTCthT1zSGYyg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/animejs/-/animejs-3.1.5.tgz}
+    name: '@types/animejs'
+    version: 3.1.5
     dev: true
 
   registry.npmmirror.com/@types/eslint/8.4.5:
@@ -622,6 +632,12 @@ packages:
       json-schema-traverse: registry.npmmirror.com/json-schema-traverse/0.4.1
       uri-js: registry.npmmirror.com/uri-js/4.4.1
     dev: true
+
+  registry.npmmirror.com/animejs/3.2.1:
+    resolution: {integrity: sha512-sWno3ugFryK5nhiDm/2BKeFCpZv7vzerWUcUPyAZLDhMek3+S/p418ldZJbJXo5ZUOpfm2kP2XRO4NJcULMy9A==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/animejs/-/animejs-3.2.1.tgz}
+    name: animejs
+    version: 3.2.1
+    dev: false
 
   registry.npmmirror.com/ansi-regex/5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ansi-regex/-/ansi-regex-5.0.1.tgz}
