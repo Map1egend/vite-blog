@@ -98,6 +98,39 @@
       <path id="path5359" d="m 233.14211,133.26761 -4.78119,-18.03226 12.45015,-6.00217 z" />
       <path id="path5361" d="m 220.64211,56.481896 7.71881,58.753454 12.45015,-6.00217 z" />
     </svg>
+    <div class="content-home">
+      <img src="https://ghchart.rshah.org/Map1egend" alt="Map1egend's Github chart" />
+      <h1 class="title-home">御前带猫不带刀</h1>
+      <div class="motto-home">星光不问赶路人，时光不负有心人。—— 《我不》</div>
+      <hr />
+      <ul class="slogan">
+        <li>
+          <router-link to="/blog"> Blog </router-link>
+          <span>|</span>
+        </li>
+        <li>
+          Github
+          <span>|</span>
+        </li>
+        <li>
+          Jianshu
+          <span>|</span>
+        </li>
+        <li>
+          Node
+          <span>|</span>
+        </li>
+        <li>
+          Interview
+          <span>|</span>
+        </li>
+        <li>
+          Css
+          <span>|</span>
+        </li>
+        <li>前端导航</li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -253,6 +286,44 @@ svg {
     stroke-width: 1;
     stroke-linecap: round;
     stroke-linejoin: round;
+  }
+}
+
+.content-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: -50px 0 0 0;
+
+  .title-home {
+    font-size: 26px;
+    height: 50px;
+    line-height: 50px;
+  }
+
+  .motto-home {
+    font-size: 16px;
+    margin-bottom: 26px;
+  }
+
+  hr {
+    width: 400px;
+    height: 1px;
+    border: none;
+    background-image: -webkit-linear-gradient(0deg, transparent, #d5d5d5, transparent);
+  }
+
+  .slogan {
+    margin: 16px 0;
+
+    li {
+      float: left;
+      margin: 0 4px;
+    }
+
+    a:hover {
+      color: rgb(20, 184, 166);
+    }
   }
 }
 </style>
