@@ -113,7 +113,7 @@
           <span>|</span>
         </li>
         <li>
-          Jianshu
+          <router-link to="/dailymusic"> DailyMusic </router-link>
           <span>|</span>
         </li>
         <li>
@@ -276,6 +276,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+a {
+  font-weight: normal;
+}
+
 svg {
   display: block;
   margin: 0 auto;
