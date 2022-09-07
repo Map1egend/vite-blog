@@ -8,7 +8,7 @@
     <template #content>
       <div class="content-wrapper">
         <div class="music">
-          <drag-upload></drag-upload>
+          <drag-upload v-model:file-list="fileList"></drag-upload>
         </div>
         <div class="lyric"></div>
       </div>
@@ -19,13 +19,17 @@
 <script lang="ts">
 import BasicLayout from './layouts/BasicLayout.vue'
 import DragUpload from '@components/Upload/DragUpload.vue'
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'DailyMusic',
   components: { BasicLayout, DragUpload },
   setup() {
-    return {}
+    let fileList = ref(null)
+
+    return {
+      fileList
+    }
   }
 })
 </script>

@@ -1,6 +1,6 @@
 <template>
-  <div class="popup-content" @click="upload">
-    <input type="file" ref="fileRef" />
+  <div class="popup-content" @click="upload" @drop.stop.prevent="dragUpload" @dragenter.stop.prevent @dragover.stop.prevent>
+    <input type="file" ref="fileRef" @change="chooseFile" />
     <div class="image"></div>
     <div class="title">Drag & Drop or <a>browse</a></div>
   </div>
@@ -11,7 +11,9 @@ import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'DragUpload',
-  setup() {
+  props: ['fileList'],
+  emits: ['update:fileList'],
+  setup(props, { emit }) {
     let fileRef = ref<HTMLInputElement | null>(null)
 
     const upload = function (): void {
@@ -20,9 +22,21 @@ export default defineComponent({
       }
     }
 
+    const dragUpload = function (event: DragEvent): void {
+      emit('update:fileList', event.dataTransfer?.files)
+    }
+
+    const chooseFile = function () {
+      if (fileRef.value instanceof HTMLInputElement) {
+        emit('update:fileList', fileRef.value.files)
+      }
+    }
+
     return {
       fileRef,
-      upload
+      upload,
+      dragUpload,
+      chooseFile
     }
   }
 })
