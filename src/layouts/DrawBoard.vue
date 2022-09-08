@@ -15,39 +15,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import DrawBoard from '@components/DrawBoard/DrawBoard.vue'
-import ToolsPanel from '@components/DrawBoard/ToolsPanel.vue'
+  import { defineComponent } from 'vue'
+  import DrawBoard from '@components/DrawBoard/DrawBoard.vue'
+  import ToolsPanel from '@components/DrawBoard/ToolsPanel.vue'
 
-export default defineComponent({ components: { DrawBoard, ToolsPanel } })
+  export default defineComponent({ components: { DrawBoard, ToolsPanel } })
 </script>
 
 <style lang="scss" scoped>
-.pos-ab {
-  position: absolute;
-}
-.draw-head {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  height: 88px;
-}
+  .pos-ab {
+    position: absolute;
+  }
+  .draw-head {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 88px;
+  }
 
-.draw-content {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin: 88px 0;
-  height: calc(100vh - 176px);
-}
+  .draw-content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 88px 0;
+    height: calc(100vh - 176px);
+  }
 
-.draw-foot {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  height: 88px;
-  bottom: 0;
-}
+  .draw-foot {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 88px;
+    bottom: 0;
+  }
 </style>

@@ -22,50 +22,50 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue'
-import usePosition, { Position } from '@hooks/usePosition'
-import { useCanvasStore } from '@store/canvasStore'
+  import { computed, defineComponent, onMounted, ref } from 'vue'
+  import usePosition, { Position } from '@hooks/usePosition'
+  import { useCanvasStore } from '@store/canvasStore'
 
-export default defineComponent({
-  props: {
-    dropData: {
-      type: Array<panelData>,
-      default: () => []
-    },
-    icon: {
-      type: String,
-      default: 'fa-solid fa-percent'
-    }
-  },
-  setup() {
-    let visible = ref<boolean>(false)
-    let maxHeight = computed(() => {
-      return visible.value ? 'max-h-84' : 'max-h-0'
-    })
-
-    const getPos = usePosition(Position.LEFT_BOTTOM)
-    let pos = ref<{ left: number; top: number }>({ left: 0, top: 0 })
-    let fatherRef = ref<HTMLElement>()
-
-    onMounted(() => {
-      if (fatherRef.value instanceof HTMLElement) {
-        pos.value = getPos(fatherRef.value) as { left: number; top: number }
+  export default defineComponent({
+    props: {
+      dropData: {
+        type: Array<panelData>,
+        default: () => []
+      },
+      icon: {
+        type: String,
+        default: 'fa-solid fa-percent'
       }
-    })
+    },
+    setup() {
+      let visible = ref<boolean>(false)
+      let maxHeight = computed(() => {
+        return visible.value ? 'max-h-84' : 'max-h-0'
+      })
 
-    const canvasStore = useCanvasStore()
+      const getPos = usePosition(Position.LEFT_BOTTOM)
+      let pos = ref<{ left: number; top: number }>({ left: 0, top: 0 })
+      let fatherRef = ref<HTMLElement>()
 
-    const changeActive = function (e: MouseEvent, content: string | number): void {
-      canvasStore.brushType = content as string
+      onMounted(() => {
+        if (fatherRef.value instanceof HTMLElement) {
+          pos.value = getPos(fatherRef.value) as { left: number; top: number }
+        }
+      })
+
+      const canvasStore = useCanvasStore()
+
+      const changeActive = function (e: MouseEvent, content: string | number): void {
+        canvasStore.brushType = content as string
+      }
+
+      return {
+        visible,
+        changeActive,
+        maxHeight,
+        fatherRef,
+        pos
+      }
     }
-
-    return {
-      visible,
-      changeActive,
-      maxHeight,
-      fatherRef,
-      pos
-    }
-  }
-})
+  })
 </script>

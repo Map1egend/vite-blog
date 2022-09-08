@@ -13,7 +13,7 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["vite/client", "@jaames/iro/dist/index"],
+    "types": ["vite/client", "@jaames/iro/dist/index", "element-plus/global"],
     "baseUrl": "./",
     "paths": {
       "@types/*": ["./src/types/*"],

@@ -27,7 +27,16 @@ module.exports = {
     // 开启 prettier 自动修复功能
     'prettier/prettier': 'error',
     'vue/valid-template-root': 'off',
-    'no-debugger': 'off'
+    'no-debugger': 'off',
+    'vue/no-setup-props-destructure': 'off',
+    'vue/script-indent': [
+      //新加了这句脚本缩进2空格
+      'error',
+      2,
+      {
+        baseIndent: 1
+      }
+    ]
   },
   overrides: [
     {
