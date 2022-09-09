@@ -11,7 +11,9 @@
           <drag-upload v-model:file-list="fileList"></drag-upload>
           <preview-picture :img-src="imgSrc"></preview-picture>
           <el-button @click="isClip = !isClip">裁剪</el-button>
-          <ml-clip :origin="imgSrc" v-if="isClip"></ml-clip>
+          <el-dialog :model-value="true" v-if="isClip" :append-to-body="true">
+            <ml-clip :origin="imgSrc"></ml-clip>
+          </el-dialog>
         </div>
         <div class="lyric"></div>
       </div>
