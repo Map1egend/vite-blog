@@ -12,7 +12,10 @@
           <preview-picture :img-src="imgSrc"></preview-picture>
           <el-button @click="isClip = !isClip">裁剪</el-button>
           <el-dialog :model-value="true" v-if="isClip" :append-to-body="true">
-            <ml-clip :origin="imgSrc"></ml-clip>
+            <ml-clip :origin="imgSrc" ref="clipRef"></ml-clip>
+            <template #footer>
+              <el-button type="primary" @click="clip">确定</el-button>
+            </template>
           </el-dialog>
         </div>
         <div class="lyric"></div>
@@ -35,6 +38,7 @@
       let fileList = ref<FileList>()
       let imgSrc = ref<string>('')
       let isClip = ref<boolean>(false)
+      let clipRef = ref()
 
       watch(fileList, (file) => {
         if (file?.length) {
@@ -42,10 +46,21 @@
         }
       })
 
+      const clip = function () {
+        if (clipRef.value) {
+          const file = clipRef.value.getFile('cover')
+          imgSrc.value = URL.createObjectURL(file)
+          // imgSrc.value = file
+        }
+        isClip.value = false
+      }
+
       return {
         fileList,
         imgSrc,
-        isClip
+        isClip,
+        clipRef,
+        clip
       }
     }
   })
