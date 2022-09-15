@@ -39,18 +39,20 @@
       let imgSrc = ref<string>('')
       let isClip = ref<boolean>(false)
       let clipRef = ref()
+      let fileInstance: File
 
-      watch(fileList, (file) => {
-        if (file?.length) {
-          imgSrc.value = URL.createObjectURL(file[0])
+      watch(fileList, (files) => {
+        if (files?.length) {
+          fileInstance = files[0]
+          imgSrc.value = URL.createObjectURL(fileInstance)
         }
       })
 
       const clip = function () {
         if (clipRef.value) {
           const file = clipRef.value.getFile('cover')
-          imgSrc.value = URL.createObjectURL(file)
-          // imgSrc.value = file
+          fileInstance = file
+          imgSrc.value = URL.createObjectURL(fileInstance)
         }
         isClip.value = false
       }

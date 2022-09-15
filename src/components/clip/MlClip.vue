@@ -1,7 +1,12 @@
 <template>
-  <div class="clip">
-    <div class="crop-box" :style="cropBoxStyle" ref="cropRef"></div>
-    <div class="mask"></div>
+  <div class="clip" ref="clipRef" @mouseleave="scaleEnd">
+    <div class="crop-box" :style="cropBoxStyle" ref="cropRef">
+      <div class="cropbox-resize nw" @mousedown.capture.stop="scaleStart" @mouseup.capture="scaleEnd"></div>
+      <div class="cropbox-resize ne" @mousedown.capture.stop="scaleStart" @mouseup.capture="scaleEnd"></div>
+      <div class="cropbox-resize se" @mousedown.capture.stop="scaleStart" @mouseup.capture="scaleEnd"></div>
+      <div class="cropbox-resize sw" @mousedown.capture.stop="scaleStart" @mouseup.capture="scaleEnd"></div>
+    </div>
+    <div class="mask" ref="mask"></div>
     <img :src="origin" ref="originSource" />
   </div>
   <canvas width="536" height="536" ref="canvasRef"></canvas>
@@ -19,6 +24,7 @@
     },
     expose: ['getDataURL', 'getFile'],
     setup(props) {
+      let clipRef = ref<HTMLDivElement>()
       let cropRef = ref<HTMLDivElement>()
       let canvasRef = ref<HTMLCanvasElement>()
       let ctx: CanvasRenderingContext2D | null = null
@@ -33,12 +39,14 @@
         maxT: 0
       }
       let imgRatio = 1
+      let initRect: DOMRect
+      let clipRect: DOMRect
 
       const cropBoxStyle = reactive({
         width: '268px',
         height: '268px',
-        left: '0px',
-        top: '0px',
+        left: `0px`,
+        top: `0px`,
         background: `no-repeat url(${props.origin})`,
         backgroundPosition: `left 0px top 0px`,
         backgroundSize: '0px 0px'
@@ -58,13 +66,23 @@
           const legalT = range(initMouse.minT, initMouse.maxT)
           let left = legalL(e.clientX - initMouse.x)
           let top = legalT(e.clientY - initMouse.y)
-          cropRef.value.style.left = left + 'px'
-          cropRef.value.style.top = top + 'px'
-          cropRef.value.style.backgroundPosition = `left ${-left}px top ${-top}px`
+          cropBoxStyle.left = left + 'px'
+          cropBoxStyle.top = top + 'px'
+          cropBoxStyle.backgroundPosition = `left ${-left}px top ${-top}px`
 
           if (canvasRef.value && originSource.value) {
             ctx?.clearRect(0, 0, 536, 536)
-            ctx?.drawImage(originSource.value, left * imgRatio, top * imgRatio, 268 * imgRatio, 268 * imgRatio, 0, 0, 268 * devicePixelRatio, 268 * devicePixelRatio)
+            ctx?.drawImage(
+              originSource.value,
+              left * imgRatio,
+              top * imgRatio,
+              parseFloat(cropBoxStyle.width) * imgRatio,
+              parseFloat(cropBoxStyle.height) * imgRatio,
+              0,
+              0,
+              268 * devicePixelRatio,
+              268 * devicePixelRatio
+            )
           }
         }
       }
@@ -135,17 +153,51 @@
             const height = originSource.value?.height
             cropBoxStyle.backgroundSize = `${width}px ${height}px`
             originSource.value && (imgRatio = originSource.value?.naturalWidth / originSource.value?.width)
+            initRect = cropRef.value?.getBoundingClientRect() as DOMRect
+            clipRect = clipRef.value?.getBoundingClientRect() as DOMRect
           })
         }
       })
 
+      let cssScale = `scale(${1 / devicePixelRatio})`
+
+      const move = function (event: Event) {
+        if (event instanceof MouseEvent) {
+          let width = event.clientX - initRect.left
+          let height = event.clientY - initRect.top
+
+          if (event.clientX > clipRect.right) {
+            width = clipRect.right - initRect.left
+          }
+          if (event.clientY > clipRect.bottom) {
+            height = clipRect.bottom - initRect.top
+          }
+
+          cropBoxStyle.width = width + 'px'
+          cropBoxStyle.height = height + 'px'
+        }
+      }
+      const scaleStart = function (e: MouseEvent) {
+        initRect = cropRef.value?.getBoundingClientRect() as DOMRect
+        clipRect = clipRef.value?.getBoundingClientRect() as DOMRect
+        clipRef.value?.addEventListener('mousemove', move, true)
+      }
+      const scaleEnd = function (e: MouseEvent) {
+        console.log('1111')
+        clipRef.value?.removeEventListener('mousemove', move, true)
+      }
+
       return {
+        clipRef,
         cropRef,
         canvasRef,
         originSource,
         cropBoxStyle,
         getDataURL,
-        getFile
+        getFile,
+        cssScale,
+        scaleStart,
+        scaleEnd
       }
     }
   })
@@ -158,9 +210,41 @@
     .crop-box {
       box-sizing: content-box;
       position: absolute;
-      border: 1px solid #fff;
       z-index: 100;
+      border: 3px solid #000;
       cursor: grab;
+
+      .cropbox-resize {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        background-color: red;
+        border-radius: 50%;
+      }
+
+      .nw {
+        left: -16px;
+        top: -16px;
+        cursor: nw-resize;
+      }
+
+      .ne {
+        left: calc(100% - 16px);
+        top: -16px;
+        cursor: ne-resize;
+      }
+
+      .se {
+        left: calc(100% - 16px);
+        top: calc(100% - 16px);
+        cursor: se-resize;
+      }
+
+      .sw {
+        left: -16px;
+        top: calc(100% - 16px);
+        cursor: sw-resize;
+      }
     }
 
     .mask {
@@ -173,7 +257,7 @@
   }
 
   canvas {
-    transform: scale(0.5);
+    transform: v-bind(cssScale);
     transform-origin: 0 0;
   }
 
