@@ -127,23 +127,45 @@
 
       let cssScale = `scale(${1 / devicePixelRatio})`
 
-      const move = function (event: Event) {
-        if (event instanceof MouseEvent) {
-          let width = event.clientX - initRect.left
-          let height = event.clientY - initRect.top
+      let move: (event: MouseEvent) => void
+      function se(event: MouseEvent) {
+        let width = event.clientX - initRect.left
+        let height = event.clientY - initRect.top
 
-          if (event.clientX > clipRect.right) {
-            width = clipRect.right - initRect.left
-          }
-          if (event.clientY > clipRect.bottom) {
-            height = clipRect.bottom - initRect.top
-          }
-
-          cropBoxStyle.width = width + 'px'
-          cropBoxStyle.height = height + 'px'
+        if (event.clientX > clipRect.right) {
+          width = clipRect.right - initRect.left
         }
+        if (event.clientY > clipRect.bottom) {
+          height = clipRect.bottom - initRect.top
+        }
+
+        cropBoxStyle.width = width + 'px'
+        cropBoxStyle.height = height + 'px'
       }
-      const scaleStart = function () {
+      function nw(event: MouseEvent) {
+        let width = initRect.right - event.clientX
+        let height = initRect.bottom - event.clientY
+
+        let left = event.clientX - clipRect.left
+        let top = event.clientY - clipRect.top
+
+        cropBoxStyle.backgroundPosition = `left ${-left}px top ${-top}px`
+        cropBoxStyle.left = left + 'px'
+        cropBoxStyle.top = top + 'px'
+        cropBoxStyle.width = width + 'px'
+        cropBoxStyle.height = height + 'px'
+      }
+
+      const moveEvents: { [key: string]: (e: MouseEvent) => void } = {
+        se,
+        nw
+      }
+      const scaleStart = function (e: MouseEvent) {
+        let type = 'se'
+        if (e.target instanceof HTMLElement) {
+          type = e.target.classList[1]
+        }
+        move = moveEvents[type]
         initRect = cropRef.value?.getBoundingClientRect() as DOMRect
         clipRect = clipRef.value?.getBoundingClientRect() as DOMRect
         clipRef.value?.addEventListener('mousemove', move, true)

@@ -1,6 +1,6 @@
 import { onMounted, ref } from 'vue'
 
-function range(min: number, max: number): (num: number) => number {
+export function range(min: number, max: number): (num: number) => number {
   return function (num: number): number {
     if (num < min) return min
     if (num > max) return max
