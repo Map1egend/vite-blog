@@ -13,7 +13,8 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, onMounted, reactive } from 'vue'
+  import { defineComponent, ref, onMounted, reactive, Ref, watch } from 'vue'
+  import useMove from '@hooks/useMove'
   export default defineComponent({
     name: 'MlClip',
     props: {
@@ -27,20 +28,14 @@
       let clipRef = ref<HTMLDivElement>()
       let cropRef = ref<HTMLDivElement>()
       let canvasRef = ref<HTMLCanvasElement>()
-      let ctx: CanvasRenderingContext2D | null = null
+      let ctx: CanvasRenderingContext2D
       let originSource = ref<HTMLImageElement>()
 
-      let initMouse = {
-        x: 0,
-        y: 0,
-        minL: 0,
-        maxL: 0,
-        minT: 0,
-        maxT: 0
-      }
       let imgRatio = 1
       let initRect: DOMRect
       let clipRect: DOMRect
+
+      let left: Ref<number>, top: Ref<number>
 
       const cropBoxStyle = reactive({
         width: '268px',
@@ -51,41 +46,6 @@
         backgroundPosition: `left 0px top 0px`,
         backgroundSize: '0px 0px'
       })
-
-      const cropMove = function (e: MouseEvent) {
-        if (cropRef.value) {
-          const range = function (min: number, max: number) {
-            return function (num: number): number {
-              let result: number = num
-              if (num < min) result = min
-              if (num > max) result = max
-              return result
-            }
-          }
-          const legalL = range(initMouse.minL, initMouse.maxL)
-          const legalT = range(initMouse.minT, initMouse.maxT)
-          let left = legalL(e.clientX - initMouse.x)
-          let top = legalT(e.clientY - initMouse.y)
-          cropBoxStyle.left = left + 'px'
-          cropBoxStyle.top = top + 'px'
-          cropBoxStyle.backgroundPosition = `left ${-left}px top ${-top}px`
-
-          if (canvasRef.value && originSource.value) {
-            ctx?.clearRect(0, 0, 536, 536)
-            ctx?.drawImage(
-              originSource.value,
-              left * imgRatio,
-              top * imgRatio,
-              parseFloat(cropBoxStyle.width) * imgRatio,
-              parseFloat(cropBoxStyle.height) * imgRatio,
-              0,
-              0,
-              268 * devicePixelRatio,
-              268 * devicePixelRatio
-            )
-          }
-        }
-      }
 
       const getDataURL = function (): string {
         if (canvasRef.value) {
@@ -126,26 +86,32 @@
       }
 
       onMounted(() => {
-        if (cropRef.value) {
-          cropRef.value.addEventListener('mousedown', function (e: MouseEvent) {
-            initMouse.x = e.clientX - this.offsetLeft
-            initMouse.y = e.clientY - this.offsetTop
-            if (originSource.value) {
-              const originSourceBox = originSource.value?.getBoundingClientRect()
-              initMouse.maxL = originSourceBox.right - this.clientWidth - originSourceBox.left
-              initMouse.maxT = originSourceBox.bottom - this.clientHeight - originSourceBox.top
-            }
-            cropRef.value?.addEventListener('mousemove', cropMove)
-          })
-          cropRef.value.addEventListener('mouseup', function () {
-            cropRef.value?.removeEventListener('mousemove', cropMove)
-          })
-          cropRef.value.addEventListener('mouseleave', function () {
-            cropRef.value?.removeEventListener('mousemove', cropMove)
-          })
-        }
+        ;({ left, top } = useMove(cropRef.value, originSource.value))
+
+        watch(
+          () => ({ left: left.value, top: top.value }),
+          ({ left, top }) => {
+            cropBoxStyle.left = left + 'px'
+            cropBoxStyle.top = top + 'px'
+            cropBoxStyle.backgroundPosition = `left ${-left}px top ${-top}px`
+
+            ctx?.clearRect(0, 0, 536, 536)
+            ctx?.drawImage(
+              originSource.value!,
+              left * imgRatio,
+              top * imgRatio,
+              parseFloat(cropBoxStyle.width) * imgRatio,
+              parseFloat(cropBoxStyle.height) * imgRatio,
+              0,
+              0,
+              268 * devicePixelRatio,
+              268 * devicePixelRatio
+            )
+          }
+        )
+
         if (canvasRef.value) {
-          ctx = canvasRef.value?.getContext('2d')
+          ctx = canvasRef.value?.getContext('2d') as CanvasRenderingContext2D
         }
         if (originSource.value) {
           originSource.value.addEventListener('load', () => {
@@ -177,13 +143,12 @@
           cropBoxStyle.height = height + 'px'
         }
       }
-      const scaleStart = function (e: MouseEvent) {
+      const scaleStart = function () {
         initRect = cropRef.value?.getBoundingClientRect() as DOMRect
         clipRect = clipRef.value?.getBoundingClientRect() as DOMRect
         clipRef.value?.addEventListener('mousemove', move, true)
       }
-      const scaleEnd = function (e: MouseEvent) {
-        console.log('1111')
+      const scaleEnd = function () {
         clipRef.value?.removeEventListener('mousemove', move, true)
       }
 
